@@ -1,6 +1,6 @@
 package com.example.backendskvteamch.repositories;
 
-import com.example.backendskvteamch.entities.User;
+import com.example.backendskvteamch.entities.Users.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

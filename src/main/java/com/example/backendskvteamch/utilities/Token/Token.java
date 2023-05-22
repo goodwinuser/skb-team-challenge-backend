@@ -1,6 +1,7 @@
 package com.example.backendskvteamch.utilities.Token;
 
-import com.example.backendskvteamch.entities.User;
+import com.example.backendskvteamch.entities.Users.Admin;
+import com.example.backendskvteamch.entities.Users.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,4 +29,8 @@ public class Token {
     @ManyToOne
     @JoinColumn(name = "user_id")
     public User user;
+
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+    public Admin admin;
 }
