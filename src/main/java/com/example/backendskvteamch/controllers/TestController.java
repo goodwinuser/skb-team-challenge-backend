@@ -6,8 +6,8 @@ import com.example.backendskvteamch.entities.DTO.Tests.TestInfoDto;
 import com.example.backendskvteamch.entities.Tests.Test;
 import com.example.backendskvteamch.services.TestService;
 import com.example.backendskvteamch.services.UserService;
-import com.example.backendskvteamch.utilities.AuthorityAnnotations.AdminAuth;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -22,38 +22,33 @@ public class TestController {
     private final TestService testService;
     private final UserService userService;
 
-    @AdminAuth
     @GetMapping
-    public List<TestInfoDto> getAllTests() {
-        return testService.getAllTests().stream().map(this::convert).collect(Collectors.toList());
+    public ResponseEntity<List<TestInfoDto>> getAllTests() {
+        return ResponseEntity.ok(testService.getAllTests().stream().map(this::convert).collect(Collectors.toList()));
     }
 
-    @AdminAuth
     @GetMapping("/{id}")
-    public TestInfoDto getTest(@PathVariable Long id) {
-        return convert(testService.getTest(id));
+    public ResponseEntity<TestInfoDto> getTest(@PathVariable Long id) {
+        return ResponseEntity.ok(convert(testService.getTest(id)));
     }
 
-    @AdminAuth
     @PostMapping
-    public TestInfoDto createTest(@RequestBody TestInfoDto testInfoDto) {
+    public ResponseEntity<TestInfoDto> createTest(@RequestBody TestInfoDto testInfoDto) {
         var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var admin = userService.getAdmin(userDetails.getUsername());
 
-        return convert(testService.createTest(admin.getId(), testInfoDto));
+        return ResponseEntity.ok(convert(testService.createTest(admin.getId(), testInfoDto)));
     }
 
-    @AdminAuth
     @PutMapping("/{testId}")
-    public TestInfoDto createTest(@PathVariable Long testId, @RequestBody TestInfoDto testInfoDto) {
-        return convert(testService.updateTest(testId, testInfoDto));
+    public ResponseEntity<TestInfoDto> createTest(@PathVariable Long testId, @RequestBody TestInfoDto testInfoDto) {
+        return ResponseEntity.ok(convert(testService.updateTest(testId, testInfoDto)));
     }
 
-    @AdminAuth
     @DeleteMapping("/{testId}")
-    public TestInfoDto createTest(@PathVariable Long testId) {
+    public ResponseEntity<TestInfoDto> createTest(@PathVariable Long testId) {
         testService.deleteTest(testId);
-        return null;
+        return ResponseEntity.ok().build();
     }
 
     private TestInfoDto convert(Test test) {
