@@ -33,7 +33,7 @@ public class Vacancy {
     private VacancyType type;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "vacancy", orphanRemoval = true)
+    @ManyToMany(mappedBy = "vacancies")
     private Set<Test> tests = new LinkedHashSet<>();
 
 

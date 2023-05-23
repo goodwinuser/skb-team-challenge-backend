@@ -35,8 +35,8 @@ public class Test {
     @OneToMany(mappedBy = "test", orphanRemoval = true)
     private Set<TestResult> testResults = new LinkedHashSet<>();
 
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name = "vacancy_id")
-    private Vacancy vacancy;
+    private Set<Vacancy> vacancies = new LinkedHashSet<>();;
 
 }
