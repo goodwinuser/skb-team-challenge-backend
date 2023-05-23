@@ -22,6 +22,8 @@ public class Test {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "test_name")
+    private String name;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "test", orphanRemoval = true)
