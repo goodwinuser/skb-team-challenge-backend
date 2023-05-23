@@ -1,11 +1,11 @@
 package com.example.backendskvteamch.entities.DTO.Tests;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class AnswerInfoDto {

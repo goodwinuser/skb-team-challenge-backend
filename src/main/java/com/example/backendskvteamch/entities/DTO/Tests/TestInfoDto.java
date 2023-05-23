@@ -1,15 +1,15 @@
 package com.example.backendskvteamch.entities.DTO.Tests;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public class CreateTestRequestDto {
+public class TestInfoDto {
     private String name;
 
     private List<QuestionInfoDto> questions;
