@@ -1,16 +1,16 @@
 package com.example.backendskvteamch.controllers;
 
 
-import com.example.backendskvteamch.entities.DTO.Auth.AuthMailRequest;
 import com.example.backendskvteamch.entities.DTO.Auth.AuthResponse;
 import com.example.backendskvteamch.entities.DTO.Auth.AuthUNameRequest;
-import com.example.backendskvteamch.entities.DTO.Register.RegistrationRequest;
+import com.example.backendskvteamch.entities.DTO.Register.RegistrationUserRequestDto;
 import com.example.backendskvteamch.services.AuthService;
-import com.example.backendskvteamch.utilities.AuthorityAnnotations.AdminAuth;
-import com.example.backendskvteamch.utilities.AuthorityAnnotations.UserAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -19,38 +19,23 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService service;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(
-            @RequestBody RegistrationRequest request
-    ) {
-        return ResponseEntity.ok(service.register(request));
+    @PostMapping("/users/register")
+    public ResponseEntity<AuthResponse> registerUser(@RequestBody RegistrationUserRequestDto request) {
+        return ResponseEntity.ok(service.registerUser(request));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> authenticateEmail(
-            @RequestBody AuthMailRequest request
-    ) {
-        return ResponseEntity.ok(service.authenticateEmail(request));
+    @PostMapping("/users/login")
+    public ResponseEntity<AuthResponse> authenticateUser(@RequestBody AuthUNameRequest request) {
+        return ResponseEntity.ok(service.authenticateUser(request));
     }
 
-
-    @PostMapping("/login/uname")
-    public ResponseEntity<AuthResponse> authenticateUName(
-            @RequestBody AuthUNameRequest request
-    ) {
-        return ResponseEntity.ok(service.authenticateUName(request));
+    @PostMapping("/admins/register")
+    public ResponseEntity<AuthResponse> registerAdmin(@RequestBody RegistrationUserRequestDto request) {
+        return ResponseEntity.ok(service.registerAdmin(request));
     }
 
-    @UserAuth
-    @GetMapping("/test")
-    public void test() {
-        System.out.println("Success!");
+    @PostMapping("/admins/login")
+    public ResponseEntity<AuthResponse> authenticateAdmin(@RequestBody AuthUNameRequest request) {
+        return ResponseEntity.ok(service.authenticateAdmin(request));
     }
-
-    @AdminAuth
-    @GetMapping("/test2")
-    public void test2() {
-        System.out.println("Success!");
-    }
-
 }
