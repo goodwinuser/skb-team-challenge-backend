@@ -24,7 +24,7 @@ public class TestController {
 
     @GetMapping
     public ResponseEntity<List<TestInfoDto>> getAllTests() {
-        return ResponseEntity.ok(testService.getAllTests().stream().map(this::convert).collect(Collectors.toList()));
+        return ResponseEntity.ok(testService.getAllTests().stream().map(TestController::convert).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
@@ -51,7 +51,7 @@ public class TestController {
         return ResponseEntity.ok().build();
     }
 
-    private TestInfoDto convert(Test test) {
+    public static TestInfoDto convert(Test test) {
         return TestInfoDto.builder()
                 .name(test.getName())
                 .questions(test.getQuestions().stream()
