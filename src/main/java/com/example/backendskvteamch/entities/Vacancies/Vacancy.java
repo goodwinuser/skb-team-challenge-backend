@@ -36,6 +36,8 @@ public class Vacancy {
     @ManyToMany(mappedBy = "vacancies")
     private Set<Test> tests = new LinkedHashSet<>();
 
+    private Boolean isOpen;
+
 
     @ManyToOne
     @JoinColumn(name = "author_id")
