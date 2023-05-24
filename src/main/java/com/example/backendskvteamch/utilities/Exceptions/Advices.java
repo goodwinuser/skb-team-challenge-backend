@@ -12,10 +12,19 @@ import java.util.List;
 @Log4j2
 @RestControllerAdvice
 public class Advices {
-
-    @ExceptionHandler
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionMessageDto notFound(NotFoundException ex) {
+        log.error(ex.getMessage());
+
+        return ExceptionMessageDto.builder()
+                .errors(List.of(ex.getMessage()))
+                .build();
+    }
+
+    @ExceptionHandler(AlreadyExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionMessageDto alreadyExist(AlreadyExistException ex) {
         log.error(ex.getMessage());
 
         return ExceptionMessageDto.builder()
