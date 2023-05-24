@@ -3,8 +3,8 @@ package com.example.backendskvteamch.entities.Users;
 
 import com.example.backendskvteamch.entities.Commons.Comment;
 import com.example.backendskvteamch.entities.Commons.Meet;
-import com.example.backendskvteamch.entities.Hierarchy.Department;
 import com.example.backendskvteamch.entities.Commons.Role;
+import com.example.backendskvteamch.entities.Hierarchy.Department;
 import com.example.backendskvteamch.entities.Tests.Test;
 import com.example.backendskvteamch.entities.Vacancies.Vacancy;
 import com.example.backendskvteamch.utilities.Token.Token;
@@ -89,6 +89,9 @@ public class Admin implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
+
+    @Column
+    private String triggers;
 
     @Override
     public String getPassword() {
