@@ -10,8 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class QuestionInfoDto {
+public class QuestionInfoDTO {
     private String data;
 
-    private List<AnswerInfoDto> answers;
+    private List<AnswerInfoDTO> answers;
 }

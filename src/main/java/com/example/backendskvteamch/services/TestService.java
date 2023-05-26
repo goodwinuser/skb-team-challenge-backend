@@ -1,10 +1,13 @@
 package com.example.backendskvteamch.services;
 
-import com.example.backendskvteamch.entities.DTO.Tests.TestInfoDto;
+import com.example.backendskvteamch.entities.DTO.Tests.TestInfoDTO;
 import com.example.backendskvteamch.entities.Tests.Answer;
 import com.example.backendskvteamch.entities.Tests.Question;
 import com.example.backendskvteamch.entities.Tests.Test;
-import com.example.backendskvteamch.repositories.*;
+import com.example.backendskvteamch.repositories.AnswerRepository;
+import com.example.backendskvteamch.repositories.QuestionRepository;
+import com.example.backendskvteamch.repositories.TestRepository;
+import com.example.backendskvteamch.repositories.TestResultRepository;
 import com.example.backendskvteamch.utilities.Exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,7 @@ public class TestService {
                 .orElseThrow(() -> new NotFoundException(String.format("Не найден тест с id %d", id)));
     }
 
-    public Test createTest(Long userId, TestInfoDto requestDto) {
+    public Test createTest(Long userId, TestInfoDTO requestDto) {
         var admin = userService.getAdmin(userId);
 
         var test = new Test();
@@ -59,7 +62,7 @@ public class TestService {
         return testRepository.save(savedTest);
     }
 
-    public Test updateTest(Long testId, TestInfoDto requestDto) {
+    public Test updateTest(Long testId, TestInfoDTO requestDto) {
         var test = getTest(testId);
         test.setName(requestDto.getName());
         test.getQuestions().clear();

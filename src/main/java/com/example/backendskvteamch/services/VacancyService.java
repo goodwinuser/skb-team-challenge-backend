@@ -1,7 +1,7 @@
 package com.example.backendskvteamch.services;
 
 import com.example.backendskvteamch.entities.Commons.VacancyType;
-import com.example.backendskvteamch.entities.DTO.Vacancies.VacancyInfoDto;
+import com.example.backendskvteamch.entities.DTO.Vacancies.VacancyInfoDTO;
 import com.example.backendskvteamch.entities.Vacancies.Vacancy;
 import com.example.backendskvteamch.repositories.TestRepository;
 import com.example.backendskvteamch.repositories.VacancyRepository;
@@ -28,7 +28,7 @@ public class VacancyService {
                 .orElseThrow(() -> new NotFoundException(String.format("Не найдена вакансия с id %d", id)));
     }
 
-    public Vacancy createVacancy(Long adminId, VacancyInfoDto vacancyInfoDto) {
+    public Vacancy createVacancy(Long adminId, VacancyInfoDTO vacancyInfoDto) {
         var author = userService.getAdmin(adminId);
 
         var vacancy = new Vacancy();
@@ -41,7 +41,7 @@ public class VacancyService {
         return vacancyRepository.save(vacancy);
     }
 
-    public Vacancy updateVacancy(Long vacancyId, VacancyInfoDto vacancyInfoDto) {
+    public Vacancy updateVacancy(Long vacancyId, VacancyInfoDTO vacancyInfoDto) {
         var vacancy = getVacancy(vacancyId);
 
         vacancy.setName(vacancyInfoDto.getName());

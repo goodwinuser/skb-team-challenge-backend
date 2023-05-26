@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  interns:
+  scb-back:
     container_name: scb-backend
     build: .
     restart: always

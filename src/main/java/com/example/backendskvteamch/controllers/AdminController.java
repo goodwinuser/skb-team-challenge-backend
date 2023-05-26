@@ -1,62 +1,83 @@
 package com.example.backendskvteamch.controllers;
 
 
-import com.example.backendskvteamch.entities.DTO.candidates.CandidateDTO;
-import com.example.backendskvteamch.entities.DTO.candidates.MeetDTO;
-import com.example.backendskvteamch.entities.DTO.candidates.ProceedCandidateDTO;
-import com.example.backendskvteamch.entities.DTO.tests.TestDTO;
-import com.example.backendskvteamch.entities.DTO.tests.TestVacancyLinkDTO;
-import com.example.backendskvteamch.entities.DTO.vacancies.VacancyDTO;
+import com.example.backendskvteamch.entities.DTO.Candidates.CandidateDTO;
+import com.example.backendskvteamch.entities.DTO.Candidates.MeetDTO;
+import com.example.backendskvteamch.entities.DTO.Candidates.ProceedCandidateDTO;
+import com.example.backendskvteamch.entities.DTO.Tests.TestInfoDTO;
+import com.example.backendskvteamch.entities.DTO.Tests.TestVacancyLinkDTO;
+import com.example.backendskvteamch.entities.DTO.Vacancies.VacancyInfoDTO;
+import com.example.backendskvteamch.services.TestService;
+import com.example.backendskvteamch.services.UserService;
+import com.example.backendskvteamch.services.VacancyService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
+    private final VacancyService vacancyService;
+
+    private final UserService userService;
+
+    private final TestService testService;
     //    1) админ может создать/редактировать/закрыть/удалить вакансию/стажировку.
     //    (возможно интеграция с условным hh.ru/тг и другими сервисами, чтобы вакансия появлялась и там сразу)
     //    в информацию о вакансии предлагаю внедрить систему тегов (как набор навыков на hh.ru)
+
     @PostMapping("/vacancy")
     @Operation(tags = "vacancy-admin")
-    public ResponseEntity<String> createVacancy(@RequestBody VacancyDTO dto) {
-        return null;
+    public ResponseEntity<VacancyInfoDTO> createVacancy(@RequestBody VacancyInfoDTO dto) {
+        var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var admin = userService.getAdmin(userDetails.getUsername());
+
+        return ResponseEntity.ok(new VacancyInfoDTO(vacancyService.createVacancy(admin.getId(), dto)));
     }
 
-    @PatchMapping("/vacancy")
+    @PatchMapping("/vacancy/{id}")
     @Operation(tags = "vacancy-admin")
-    public ResponseEntity<String> updateVacancy(@RequestBody VacancyDTO dto) {
-        return null;
+    public ResponseEntity<VacancyInfoDTO> updateVacancy(@PathVariable Long id, @RequestBody VacancyInfoDTO dto) {
+        return ResponseEntity.ok(new VacancyInfoDTO(vacancyService.updateVacancy(id, dto)));
     }
 
-    //    Archive
-    @PutMapping("/vacancy/{vacancy_id}")
+
+    @PostMapping("/vacancy/open/{id}")
     @Operation(tags = "vacancy-admin")
-    public ResponseEntity<String> dropVacancy(@PathVariable Long vacancy_id) {
-        return null;
+    public ResponseEntity<VacancyInfoDTO> openVacancy(@PathVariable Long id) {
+        return ResponseEntity.ok(new VacancyInfoDTO(vacancyService.openVacancy(id)));
+    }
+
+    @PostMapping("/vacancy/close/{id}")
+    @Operation(tags = "vacancy-admin")
+    public ResponseEntity<VacancyInfoDTO> closeVacancy(@PathVariable Long id) {
+        return ResponseEntity.ok(new VacancyInfoDTO(vacancyService.closeVacancy(id)));
     }
 
     //    Full delete
     @DeleteMapping("/vacancy/{vacancy_id}")
     @Operation(tags = "vacancy-admin")
     public ResponseEntity<String> removeVacancy(@PathVariable Long vacancy_id) {
-        return null;
+        vacancyService.deleteVacancy(vacancy_id);
+        return ResponseEntity.ok().build();
     }
 
     //    Add test to vacancy
     @PostMapping("/vacancy/link_test")
     @Operation(tags = "vacancy-admin")
-    public ResponseEntity<String> linkTestToVacancy(@RequestBody TestVacancyLinkDTO dto) {
-        return null;
+    public ResponseEntity<VacancyInfoDTO> linkTestToVacancy(@RequestBody TestVacancyLinkDTO dto) {
+        return ResponseEntity.ok(new VacancyInfoDTO(vacancyService.attachTest(dto.vacancy_id(), dto.test_id())));
     }
 
     //    Unlink test from vacancy
     @PostMapping("/vacancy/unlink_test")
     @Operation(tags = "vacancy-admin")
-    public ResponseEntity<String> unlinkTestFromVacancy(@RequestBody TestVacancyLinkDTO dto) {
-        return null;
+    public ResponseEntity<VacancyInfoDTO> unlinkTestFromVacancy(@RequestBody TestVacancyLinkDTO dto) {
+        return ResponseEntity.ok(new VacancyInfoDTO(vacancyService.removeTest(dto.vacancy_id(), dto.test_id())));
     }
 
     //    2) просмотреть все отклики по созданным/открытым вакансиям
@@ -119,20 +140,25 @@ public class AdminController {
     //    4) создать/изменить/удалить тесты, которые пользователь может пройти (психотесты будут не удаляемые я думаю)
     @PostMapping("/test")
     @Operation(tags = "test-admin")
-    public ResponseEntity<String> createTest(@RequestBody TestDTO dto) {
-        return null;
+    public ResponseEntity<TestInfoDTO> createTest(@RequestBody TestInfoDTO testInfoDto) {
+        var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var admin = userService.getAdmin(userDetails.getUsername());
+
+        return ResponseEntity.ok(new TestInfoDTO(testService.createTest(admin.getId(), testInfoDto)));
     }
 
-    @PatchMapping("/test")
+
+    @PatchMapping("/test/{test_id}")
     @Operation(tags = "test-admin")
-    public ResponseEntity<String> updateTest(@RequestBody TestDTO dto) {
-        return null;
+    public ResponseEntity<TestInfoDTO> updateTest(@PathVariable Long test_id, @RequestBody TestInfoDTO testInfoDto) {
+        return ResponseEntity.ok(new TestInfoDTO(testService.updateTest(test_id, testInfoDto)));
     }
 
     @DeleteMapping("/test/{test_id}")
     @Operation(tags = "test-admin")
-    public ResponseEntity<String> deleteTest(@PathVariable Long test_id) {
-        return null;
+    public ResponseEntity<TestInfoDTO> deleteTest(@PathVariable Long test_id) {
+        testService.deleteTest(test_id);
+        return ResponseEntity.ok().build();
     }
 
     //    5) админ может назначить кандидату собеседование на определенное время и дату
@@ -170,8 +196,6 @@ public class AdminController {
         return null;
     }
 
-    //    7) пообщаться с кандидатом или другими hr/коллегами через защищенный чат на нашей платформе
-    //    (большим плюсом будет еще и видео-конференции на нашей платформе)
 
 
     //    9) просмотреть статистику по откликам и вакансиям во всей системе

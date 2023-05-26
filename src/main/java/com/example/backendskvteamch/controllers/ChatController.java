@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
+    //    7) пообщаться с кандидатом или другими hr/коллегами через защищенный чат на нашей платформе
+    //    (большим плюсом будет еще и видео-конференции на нашей платформе)
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
     private final ChatRoomService chatRoomService;

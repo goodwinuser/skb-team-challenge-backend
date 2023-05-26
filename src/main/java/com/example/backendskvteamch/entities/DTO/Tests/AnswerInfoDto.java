@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class AnswerInfoDto {
+public class AnswerInfoDTO {
     private String data;
 
     private Boolean isCorrect;

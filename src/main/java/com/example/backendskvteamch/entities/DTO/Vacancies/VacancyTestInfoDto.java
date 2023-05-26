@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class VacancyTestInfoDto {
+public class VacancyTestInfoDTO {
     private Long vacancyId;
     private Long testId;
 }

@@ -1,4 +1,4 @@
-package com.example.backendskvteamch.entities.DTO.tests;
+package com.example.backendskvteamch.entities.DTO.Tests;
 
 import lombok.Builder;
 

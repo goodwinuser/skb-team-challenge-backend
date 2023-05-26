@@ -1,4 +1,4 @@
-package com.example.backendskvteamch.entities.DTO.candidates;
+package com.example.backendskvteamch.entities.DTO.Candidates;
 
 public record MeetDTO(Long id,
                       Long interviewer_id,
