@@ -21,7 +21,7 @@ public class Tag {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "vacancy_id")
     private Set<Vacancy> vacancies = new LinkedHashSet<>();
 }

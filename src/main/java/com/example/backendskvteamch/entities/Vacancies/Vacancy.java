@@ -37,20 +37,20 @@ public class Vacancy {
     private Integer maxSalary;
 
     @ToString.Exclude
-    @ManyToMany(mappedBy = "vacancies")
+    @ManyToMany(mappedBy = "vacancies", fetch = FetchType.EAGER)
     private Set<Test> tests = new LinkedHashSet<>();
 
     private Boolean isOpen;
 
-    @ManyToMany
-    private Set<Tag> tags;
+    @ManyToMany(mappedBy = "vacancies", fetch = FetchType.EAGER)
+    private Set<Tag> tags = new LinkedHashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Admin author;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "vacancy_inner_list", orphanRemoval = true)
+    @OneToMany(mappedBy = "vacancy_inner_list", orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<User> users = new LinkedHashSet<>();
 
 }

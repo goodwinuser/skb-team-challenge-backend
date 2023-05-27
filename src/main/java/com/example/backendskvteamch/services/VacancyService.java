@@ -2,7 +2,9 @@ package com.example.backendskvteamch.services;
 
 import com.example.backendskvteamch.entities.Commons.VacancyType;
 import com.example.backendskvteamch.entities.DTO.Vacancies.VacancyInfoDTO;
+import com.example.backendskvteamch.entities.Vacancies.Tag;
 import com.example.backendskvteamch.entities.Vacancies.Vacancy;
+import com.example.backendskvteamch.repositories.TagRepository;
 import com.example.backendskvteamch.repositories.TestRepository;
 import com.example.backendskvteamch.repositories.VacancyRepository;
 import com.example.backendskvteamch.utilities.Exceptions.NotFoundException;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +22,7 @@ public class VacancyService {
     private final UserService userService;
     private final TestService testService;
     private final TestRepository testRepository;
+    private final TagRepository tagRepository;
 
     public List<Vacancy> getVacancies() {
         return vacancyRepository.findAll();
@@ -36,9 +41,20 @@ public class VacancyService {
         vacancy.setDescription(vacancyInfoDto.getDescription());
         vacancy.setType(VacancyType.valueOf(vacancyInfoDto.getType()));
         vacancy.setIsOpen(vacancyInfoDto.getIsOpen());
+        vacancy.setMinSalary(vacancyInfoDto.getMinSalary());
+        vacancy.setMaxSalary(vacancyInfoDto.getMaxSalary());
         vacancy.setAuthor(author);
+        var savedVacancy = vacancyRepository.save(vacancy);
 
-        return vacancyRepository.save(vacancy);
+        for(var tagName : vacancyInfoDto.getTags()){
+            var tag = new Tag();
+            tag.setName(tagName);
+            tag.getVacancies().add(savedVacancy);
+
+            savedVacancy.getTags().add(tagRepository.save(tag));
+        }
+
+        return vacancyRepository.save(savedVacancy);
     }
 
     public Vacancy updateVacancy(Long vacancyId, VacancyInfoDTO vacancyInfoDto) {
@@ -47,8 +63,26 @@ public class VacancyService {
         vacancy.setName(vacancyInfoDto.getName());
         vacancy.setDescription(vacancyInfoDto.getDescription());
         vacancy.setType(VacancyType.valueOf(vacancyInfoDto.getType()));
+        vacancy.setMinSalary(vacancyInfoDto.getMinSalary());
+        vacancy.setMaxSalary(vacancyInfoDto.getMaxSalary());
 
-        return vacancyRepository.save(vacancy);
+        for (var oldTag : vacancy.getTags()) {
+            oldTag.setVacancies(oldTag.getVacancies().stream().filter(x -> !Objects.equals(x.getId(), vacancy.getId())).collect(Collectors.toSet()));
+            tagRepository.save(oldTag);
+        }
+        vacancy.getTags().clear();
+
+        var savedVacancy = vacancyRepository.save(vacancy);
+
+        for (var tagName : vacancyInfoDto.getTags()) {
+            var tag = new Tag();
+            tag.setName(tagName);
+            tag.getVacancies().add(savedVacancy);
+
+            savedVacancy.getTags().add(tagRepository.save(tag));
+        }
+
+        return vacancyRepository.save(savedVacancy);
     }
 
     public Vacancy openVacancy(Long vacancyId) {
