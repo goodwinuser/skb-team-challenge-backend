@@ -9,6 +9,8 @@ import lombok.*;
 @Getter
 @Setter
 public class AnswerInfoDTO {
+    private Long id;
+
     private String data;
 
     private Boolean isCorrect;

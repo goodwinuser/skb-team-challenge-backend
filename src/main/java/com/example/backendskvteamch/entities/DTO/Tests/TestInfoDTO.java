@@ -12,11 +12,12 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class TestInfoDTO {
+    private Long id;
     private String name;
-
     private List<QuestionInfoDTO> questions;
 
     public TestInfoDTO(Test test) {
+        this.id = test.getId();
         this.name = test.getName();
         this.questions = test.getQuestions().stream()
                 .map(x -> QuestionInfoDTO.builder()

@@ -11,6 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 public class QuestionInfoDTO {
+    private Long id;
+
     private String data;
 
     private List<AnswerInfoDTO> answers;
