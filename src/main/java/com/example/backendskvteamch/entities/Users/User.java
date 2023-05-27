@@ -5,6 +5,7 @@ import com.example.backendskvteamch.entities.Commons.HhLink;
 import com.example.backendskvteamch.entities.Commons.Meet;
 import com.example.backendskvteamch.entities.Commons.Role;
 import com.example.backendskvteamch.entities.Tests.TestResult;
+import com.example.backendskvteamch.entities.Vacancies.Tag;
 import com.example.backendskvteamch.entities.Vacancies.Vacancy;
 import com.example.backendskvteamch.utilities.Token.Token;
 import jakarta.persistence.*;
@@ -35,7 +36,23 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable = false)
-    private String fio;
+    private String firstName;
+
+    @Column(nullable = false)
+    private String secondName;
+
+    private String thirdName;
+
+    @Column(columnDefinition = "text")
+    private String description;
+
+    private Integer expectedSalary;
+
+    private String phone;
+
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    private Set<Tag> tags = new LinkedHashSet<>();
 
     @Column(nullable = false, unique = true)
     @Setter(AccessLevel.NONE)
@@ -45,6 +62,9 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+
+
 
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
@@ -63,6 +83,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "hh_link_id")
     private HhLink hhLink;
 
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "vacancy_id")
     private Set<Vacancy> vacancies = new LinkedHashSet<>();;

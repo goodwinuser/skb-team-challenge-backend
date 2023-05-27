@@ -1,5 +1,6 @@
 package com.example.backendskvteamch.entities.Vacancies;
 
+import com.example.backendskvteamch.entities.Users.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,10 @@ public class Tag {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "vacancy_id")
     private Set<Vacancy> vacancies = new LinkedHashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private Set<User> users = new LinkedHashSet<>();
 
     @Override
     public boolean equals(Object o) {
