@@ -13,10 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -66,9 +63,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "hh_link_id")
     private HhLink hhLink;
 
-    @ManyToOne
-    @JoinColumn(name = "vacancy_inner_list_id")
-    private Vacancy vacancy_inner_list;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "vacancy_id")
+    private Set<Vacancy> vacancies = new LinkedHashSet<>();;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -103,5 +100,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
