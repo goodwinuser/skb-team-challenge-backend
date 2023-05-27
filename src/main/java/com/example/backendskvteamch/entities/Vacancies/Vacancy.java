@@ -32,12 +32,18 @@ public class Vacancy {
     @Enumerated(EnumType.STRING)
     private VacancyType type;
 
+    private Integer minSalary;
+
+    private Integer maxSalary;
+
     @ToString.Exclude
     @ManyToMany(mappedBy = "vacancies")
     private Set<Test> tests = new LinkedHashSet<>();
 
     private Boolean isOpen;
 
+    @ManyToMany
+    private Set<Tag> tags;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
@@ -46,7 +52,5 @@ public class Vacancy {
     @ToString.Exclude
     @OneToMany(mappedBy = "vacancy_inner_list", orphanRemoval = true)
     private Set<User> users = new LinkedHashSet<>();
-
-
 
 }
