@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class VacancyInfoDTO {
+    private Long id;
     private String name;
     private String description;
     private String type;
@@ -26,6 +27,7 @@ public class VacancyInfoDTO {
     private List<Long> users;
 
     public VacancyInfoDTO(Vacancy vacancy) {
+        this.id = vacancy.getId();
         this.name = vacancy.getName();
         this.description = vacancy.getDescription();
         this.type = vacancy.getType().name();
