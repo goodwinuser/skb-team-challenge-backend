@@ -6,6 +6,7 @@ import com.example.backendskvteamch.entities.Vacancies.Tag;
 import com.example.backendskvteamch.entities.Vacancies.Vacancy;
 import com.example.backendskvteamch.repositories.TagRepository;
 import com.example.backendskvteamch.repositories.TestRepository;
+import com.example.backendskvteamch.repositories.UserRepository;
 import com.example.backendskvteamch.repositories.VacancyRepository;
 import com.example.backendskvteamch.utilities.Exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class VacancyService {
     private final VacancyRepository vacancyRepository;
     private final UserService userService;
     private final TestService testService;
+    private final UserRepository userRepository;
     private final TestRepository testRepository;
     private final TagRepository tagRepository;
 
@@ -46,7 +48,7 @@ public class VacancyService {
         vacancy.setAuthor(author);
         var savedVacancy = vacancyRepository.save(vacancy);
 
-        for(var tagName : vacancyInfoDto.getTags()){
+        for (var tagName : vacancyInfoDto.getTags()) {
             var tag = new Tag();
             tag.setName(tagName);
             tag.getVacancies().add(savedVacancy);
@@ -121,6 +123,30 @@ public class VacancyService {
             testRepository.save(test);
 
             vacancy.getTests().remove(test);
+        }
+        return vacancyRepository.save(vacancy);
+    }
+
+    public Vacancy attachUser(Long vacancyId, Long userId) {
+        var user = userService.getUser(userId);
+        var vacancy = getVacancy(vacancyId);
+
+        user.getVacancies().add(vacancy);
+        userRepository.save(user);
+
+        vacancy.getUsers().add(user);
+        return vacancyRepository.save(vacancy);
+    }
+
+    public Vacancy removeUser(Long vacancyId, Long userId) {
+        var user = userService.getUser(userId);
+        var vacancy = getVacancy(vacancyId);
+
+        if (vacancy.getUsers().stream().anyMatch(x -> x.getId().equals(user.getId()))) {
+            user.getVacancies().remove(vacancy);
+            userRepository.save(user);
+
+            vacancy.getUsers().remove(user);
         }
         return vacancyRepository.save(vacancy);
     }
