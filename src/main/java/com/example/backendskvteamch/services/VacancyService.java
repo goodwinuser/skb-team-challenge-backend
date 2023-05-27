@@ -100,7 +100,22 @@ public class VacancyService {
     }
 
     public void deleteVacancy(Long vacancyId) {
-        vacancyRepository.delete(getVacancy(vacancyId));
+        var vacancy = getVacancy(vacancyId);
+        for(var user : vacancy.getUsers()){
+            user.setVacancies(user.getVacancies().stream().filter(x-> !Objects.equals(x.getId(), vacancy.getId())).collect(Collectors.toSet()));
+        }
+        for(var tag : vacancy.getTags()){
+            tag.setVacancies(tag.getVacancies().stream().filter(x-> !Objects.equals(x.getId(), vacancy.getId())).collect(Collectors.toSet()));
+        }
+        for(var test : vacancy.getTests()){
+            test.setVacancies(test.getVacancies().stream().filter(x-> !Objects.equals(x.getId(), vacancy.getId())).collect(Collectors.toSet()));
+        }
+
+        vacancy.getUsers().clear();
+        vacancy.getTags().clear();
+        vacancy.getTests().clear();
+
+        vacancyRepository.delete(vacancy);
     }
 
     public Vacancy attachTest(Long vacancyId, Long testId) {
