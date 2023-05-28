@@ -25,7 +25,7 @@ public class Question {
     private String data;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "question", orphanRemoval = true)
+    @OneToMany(mappedBy = "question", orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Answer> answers = new LinkedHashSet<>();
 
     @ManyToOne

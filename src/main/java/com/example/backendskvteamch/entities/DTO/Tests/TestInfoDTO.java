@@ -21,9 +21,11 @@ public class TestInfoDTO {
         this.name = test.getName();
         this.questions = test.getQuestions().stream()
                 .map(x -> QuestionInfoDTO.builder()
+                        .id(x.getId())
                         .data(x.getData())
                         .answers(x.getAnswers().stream()
                                 .map(y -> AnswerInfoDTO.builder()
+                                        .id(y.getId())
                                         .data(y.getData())
                                         .isCorrect(y.getIsCorrect())
                                         .build())
