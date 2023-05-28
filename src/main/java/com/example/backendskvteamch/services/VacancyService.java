@@ -103,12 +103,15 @@ public class VacancyService {
         var vacancy = getVacancy(vacancyId);
         for(var user : vacancy.getUsers()){
             user.setVacancies(user.getVacancies().stream().filter(x-> !Objects.equals(x.getId(), vacancy.getId())).collect(Collectors.toSet()));
+            userRepository.save(user);
         }
         for(var tag : vacancy.getTags()){
             tag.setVacancies(tag.getVacancies().stream().filter(x-> !Objects.equals(x.getId(), vacancy.getId())).collect(Collectors.toSet()));
+            tagRepository.save(tag);
         }
         for(var test : vacancy.getTests()){
             test.setVacancies(test.getVacancies().stream().filter(x-> !Objects.equals(x.getId(), vacancy.getId())).collect(Collectors.toSet()));
+            testRepository.save(test);
         }
 
         vacancy.getUsers().clear();
